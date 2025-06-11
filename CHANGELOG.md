@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.0.5 - 2025-06-11
+- Fixed constants import (pretty sure this time).
+
 # 0.0.4 - 2025-06-11
 - Fixed constants import (hopefully).
 

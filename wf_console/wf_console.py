@@ -1,6 +1,6 @@
 import os
 import re
-from constants import *
+from .constants import Constants
 
 class Console():
 
@@ -18,7 +18,7 @@ class Console():
         tag_map = {}
 
         # Loop through all attributes defined in the class (not instance).
-        for key, value in self.__class__.__dict__.items():
+        for key, value in Constants.__class__.__dict__.items():
             
             # Only include constants:
             # - Attribute name must be all uppercase (like 'RED', 'BOLD', etc.).
@@ -49,12 +49,12 @@ class Console():
         def replacer(match: re.Match) -> str:
             closing, tag = match.group(1), match.group(2)
             if closing:
-                return self.RESET
+                return Constants.RESET
             return self.TAG_MAP.get(tag, "")
 
         pattern = re.compile(r'<(/?)(\w+)>')
         styled_text = pattern.sub(replacer, text)
-        print(styled_text + self.RESET)
+        print(styled_text + Constants.RESET)
 
 
     def fancy_input(self, text: str) -> str:
@@ -71,12 +71,12 @@ class Console():
         def replacer(match: re.Match) -> str:
             closing, tag = match.group(1), match.group(2)
             if closing:
-                return self.RESET
+                return Constants.RESET
             return self.TAG_MAP.get(tag, "")
 
         pattern = re.compile(r'<(/?)(\w+)>')
         styled_text = pattern.sub(replacer, text)
-        return input(styled_text + self.RESET)
+        return input(styled_text + Constants.RESET)
 
 
     def menu(self, title: str, item_list: list[str], input_message: str ='enter selection: ',  prepend_str: str = None, append_str: str = None) -> str:
