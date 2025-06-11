@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.0.7 - 2025-06-11
+- Fixed coloring issue with constants refactoring.
+
 # 0.0.6 - 2025-06-11
 - Added pagenated_print back and pandas dependency.
 

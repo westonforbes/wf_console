@@ -1,7 +1,7 @@
 import os
 import re
 import pandas as pd
-from .constants import Constants
+from constants import Constants
 
 class Console():
 
@@ -19,7 +19,7 @@ class Console():
         tag_map = {}
 
         # Loop through all attributes defined in the class (not instance).
-        for key, value in Constants.__class__.__dict__.items():
+        for key, value in Constants.__dict__.items():
             
             # Only include constants:
             # - Attribute name must be all uppercase (like 'RED', 'BOLD', etc.).
@@ -199,4 +199,5 @@ class Console():
         self.fancy_input("<INPUT_PROMPT>press <KEYBOARD_KEY>ENTER</KEYBOARD_KEY><INPUT_PROMPT> to continue... </INPUT_PROMPT>")
         
 if __name__ == "__main__":
-    pass
+    console = Console()
+    console.fancy_print("<RED>Test</RED> <GREEN>Console</GREEN> <BLUE>Output</BLUE>")
