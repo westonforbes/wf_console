@@ -1,4 +1,4 @@
-# 🖥️ WF Console
+# WF Console
 
 ## Introduction
 
@@ -57,13 +57,13 @@ Console.paginated_print(df)
 
 ## Features
 
-- 🎨 **ANSI Styling**: Use predefined tags like `<GOOD>`, `<BAD>`, `<INFO>`, etc., for colorful output.
-- 📋 **Menu Systems**:
+- **ANSI Styling**: Use predefined tags like `<GOOD>`, `<BAD>`, `<INFO>`, etc., for colorful output.
+- **Menu Systems**:
   - Basic menu with customizable title, prompt, prepend/append text.
   - Validated menu that ensures numeric input and range validation.
-- 📊 **Paginated DataFrame Display**: View large data frames in the terminal with pagination.
-- 🚀 **Cross-Platform Clear Screen Support**
-- 🔁 **Reusable Tag Map via `Constants` Module**
+- **Paginated DataFrame Display**: View large data frames in the terminal with pagination.
+- **Cross-Platform Clear Screen Support**
+- **Reusable Tag Map via `Constants` Module**
 
 ---
 

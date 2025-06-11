@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.0.11 - 2025-06-11
+- README.md emoji issue?
+
 # 0.0.10 - 2025-06-11
 - CRLF issue?
 
