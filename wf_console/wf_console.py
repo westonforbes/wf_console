@@ -1,3 +1,6 @@
+"""
+WF Console - A utility class for enhanced terminal output with ANSI styling and menu creation.
+"""
 import os
 import re
 import pandas as pd
@@ -5,41 +8,24 @@ from .constants import Constants
 
 class Console():
 
+    # Class-level tag map initialization
+    TAG_MAP = {}
+    
+    # Initialize the tag map at class level
+    for key, value in Constants.__dict__.items():
+        if key.isupper() and isinstance(value, str):
+            TAG_MAP[key] = value
 
-    def __init__(self):
-        """
-        Initializes the tag mapping dictionary by collecting all class-level constants 
-        (attributes with uppercase names and string values). These are assumed to be 
-        ANSI escape code tags used for styling terminal output.
-
-        Attributes:
-            TAG_MAP (Dict[str, str]): Mapping of tag names (e.g., 'RED') to ANSI codes.
-        """      
-        # Initialize an empty dictionary to store tag mappings.
-        tag_map = {}
-
-        # Loop through all attributes defined in the class (not instance).
-        for key, value in Constants.__dict__.items():
-            
-            # Only include constants:
-            # - Attribute name must be all uppercase (like 'RED', 'BOLD', etc.).
-            # - Attribute value must be a string (we're targeting ANSI escape codes).
-            if key.isupper() and isinstance(value, str):
-                tag_map[key] = value  # Add to the tag map.
-
-        # Assign the resulting dictionary to the instance variable.
-        self.TAG_MAP = tag_map
-
-
-    def clear(self) -> None:
+    @staticmethod
+    def clear() -> None:
         """
         Clears the terminal screen using an OS-specific command.
         Works on both Windows and Unix-like systems.
         """
         os.system('cls' if os.name == 'nt' else 'clear')
 
-
-    def fancy_print(self, text: str) -> None:
+    @staticmethod
+    def fancy_print(text: str) -> None:
         """
         Prints the given text to the terminal, replacing tags like <TAG> and </TAG> 
         with corresponding ANSI escape codes defined in TAG_MAP.
@@ -51,14 +37,14 @@ class Console():
             closing, tag = match.group(1), match.group(2)
             if closing:
                 return Constants.RESET
-            return self.TAG_MAP.get(tag, "")
+            return Console.TAG_MAP.get(tag, "")
 
         pattern = re.compile(r'<(/?)(\w+)>')
         styled_text = pattern.sub(replacer, text)
         print(styled_text + Constants.RESET)
 
-
-    def fancy_input(self, text: str) -> str:
+    @staticmethod
+    def fancy_input(text: str) -> str:
         """
         Displays styled input prompt by replacing formatting tags with ANSI codes,
         and returns the raw input from the user.
@@ -73,14 +59,14 @@ class Console():
             closing, tag = match.group(1), match.group(2)
             if closing:
                 return Constants.RESET
-            return self.TAG_MAP.get(tag, "")
+            return Console.TAG_MAP.get(tag, "")
 
         pattern = re.compile(r'<(/?)(\w+)>')
         styled_text = pattern.sub(replacer, text)
         return input(styled_text + Constants.RESET)
 
-
-    def menu(self, title: str, item_list: list[str], input_message: str ='enter selection: ',  prepend_str: str = None, append_str: str = None) -> str:
+    @staticmethod
+    def menu(title: str, item_list: list[str], input_message: str ='enter selection: ',  prepend_str: str = None, append_str: str = None) -> str:
         """
         Creates a simple menu and returns the user's selection (input is not validated).
         
@@ -94,10 +80,10 @@ class Console():
         """
 
         # First clear the console.
-        self.clear()
+        Console.clear()
 
         # Print the menu title.
-        self.fancy_print(f"\n<MENU_TITLE>---{title}---</MENU_TITLE>")
+        Console.fancy_print(f"\n<MENU_TITLE>---{title}---</MENU_TITLE>")
 
         # Check that item_list is a list of strings.
         if not (isinstance(item_list, list) and all(isinstance(item, str) for item in item_list)): raise ValueError('item_list is not a list of strings.')
@@ -105,9 +91,9 @@ class Console():
         
         if prepend_str is not None:
             # If prepend_str is provided, print it.
-            self.fancy_print(prepend_str)
+            Console.fancy_print(prepend_str)
         
-        self.fancy_print("")
+        Console.fancy_print("")
 
         # Iterator.
         i = 1
@@ -116,26 +102,26 @@ class Console():
         for item in item_list:
 
             # Print out the menu option.
-            self.fancy_print(f"<MENU_KEY>[{i:02}]</MENU_KEY> - <MENU_ITEM>{item}</MENU_ITEM>")
+            Console.fancy_print(f"<MENU_KEY>[{i:02}]</MENU_KEY> - <MENU_ITEM>{item}</MENU_ITEM>")
 
             # Increment the iterator.
             i += 1
         
         if append_str is not None:
             # If append_str is provided, print it.
-            self.fancy_print(append_str)
+            Console.fancy_print(append_str)
 
         # Get the users selection.
-        return self.fancy_input(f"\n<MENU_SELECTION_PROMPT>{input_message}</MENU_SELECTION_PROMPT>")
+        return Console.fancy_input(f"\n<MENU_SELECTION_PROMPT>{input_message}</MENU_SELECTION_PROMPT>")
 
-
-    def integer_only_menu_with_validation(self, title: str, item_list: list[str], input_message: str ='enter selection: ', prepend_str: str = None, append_str: str = None) -> tuple[int, str]:
+    @staticmethod
+    def integer_only_menu_with_validation(title: str, item_list: list[str], input_message: str ='enter selection: ', prepend_str: str = None, append_str: str = None) -> tuple[int, str]:
 
         # Loop until we get a valid input.
         while True:
 
             # Call the menu function which renders the menu and input message without validating the input.
-            selection = self.menu(title, item_list, input_message, prepend_str, append_str)
+            selection = Console.menu(title, item_list, input_message, prepend_str, append_str)
 
             # Try protect...
             try:
@@ -151,15 +137,16 @@ class Console():
                 
                 # If the input is a valid integer but is out of range...
                 else:
-                    self.fancy_print("<BAD>\nyour input is out of the menu range.</BAD>")
-                    self.press_enter_pause()
+                    Console.fancy_print("<BAD>\nyour input is out of the menu range.</BAD>")
+                    Console.press_enter_pause()
             
             # If the input is not a integer...
             except ValueError:
-                self.fancy_print("<BAD>\nyour input is non-numeric.</BAD>")
-                self.press_enter_pause()
+                Console.fancy_print("<BAD>\nyour input is non-numeric.</BAD>")
+                Console.press_enter_pause()
 
-    def paginated_print(self, df: pd.DataFrame, page_size: int = 10):
+    @staticmethod
+    def paginated_print(df: pd.DataFrame, page_size: int = 10):
         """
         Pretty prints a DataFrame in chunks, with row numbers, prompting the user to press Enter to continue.
 
@@ -180,24 +167,21 @@ class Console():
             row_numbers = [str(i).zfill(row_num_width) for i in range(start, min(end, total_rows))]
             chunk.insert(0, 'Row', row_numbers)
 
-            self.clear()
-            self.fancy_print(f"<DATA>Displaying rows {start+1} to {min(end, total_rows)} of {total_rows}\n</DATA>")
-            self.fancy_print(f"<DATA>{chunk.to_string(index=False)}</DATA>")
+            Console.clear()
+            Console.fancy_print(f"<DATA>Displaying rows {start+1} to {min(end, total_rows)} of {total_rows}\n</DATA>")
+            Console.fancy_print(f"<DATA>{chunk.to_string(index=False)}</DATA>")
 
             if end < total_rows:
-                result = self.fancy_input(f"<INPUT_PROMPT>type <KEYBOARD_KEY>n</KEYBOARD_KEY><INPUT_PROMPT> to quit or press </INPUT_PROMPT><KEYBOARD_KEY>ENTER</KEYBOARD_KEY><INPUT_PROMPT> to continue... </INPUT_PROMPT>")
+                result = Console.fancy_input(f"<INPUT_PROMPT>type <KEYBOARD_KEY>n</KEYBOARD_KEY><INPUT_PROMPT> to quit or press </INPUT_PROMPT><KEYBOARD_KEY>ENTER</KEYBOARD_KEY><INPUT_PROMPT> to continue... </INPUT_PROMPT>")
                 if result.strip().lower() == 'n':
                     break
             else:
-                self.press_enter_pause()
+                Console.press_enter_pause()
 
-
-    def press_enter_pause(self):
+    @staticmethod
+    def press_enter_pause():
         """
         Pauses the program until the user presses Enter.
         """
-        self.fancy_input("<INPUT_PROMPT>press <KEYBOARD_KEY>ENTER</KEYBOARD_KEY><INPUT_PROMPT> to continue... </INPUT_PROMPT>")
+        Console.fancy_input("<INPUT_PROMPT>press <KEYBOARD_KEY>ENTER</KEYBOARD_KEY><INPUT_PROMPT> to continue... </INPUT_PROMPT>")
         
-if __name__ == "__main__":
-    console = Console()
-    console.fancy_print("<RED>Test</RED> <GREEN>Console</GREEN> <BLUE>Output</BLUE>")

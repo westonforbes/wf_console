@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.0.9 - 2025-06-11
+- Refactored to static methods.
+
 # 0.0.8 - 2025-06-11
 - Forgot one stinkin' period on my import.
 
