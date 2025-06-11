@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.0.10 - 2025-06-11
+- CRLF issue?
+
 # 0.0.9 - 2025-06-11
 - Refactored to static methods.
 
