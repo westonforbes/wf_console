@@ -1,5 +1,6 @@
 import os
 import re
+import pandas as pd
 from .constants import Constants
 
 class Console():
@@ -156,6 +157,38 @@ class Console():
             # If the input is not a integer...
             except ValueError:
                 self.fancy_print("<BAD>\nyour input is non-numeric.</BAD>")
+                self.press_enter_pause()
+
+    def paginated_print(self, df: pd.DataFrame, page_size: int = 10):
+        """
+        Pretty prints a DataFrame in chunks, with row numbers, prompting the user to press Enter to continue.
+
+        Args:
+            df (pd.DataFrame): The DataFrame to print.
+            page_size (int): Number of rows to display per page.
+        """
+        total_rows = len(df)
+        pages = (total_rows + page_size - 1) // page_size  # Ceiling division
+        row_num_width = len(str(total_rows - 1))  # Zero-padding width
+
+        for page in range(pages):
+            start = page * page_size
+            end = start + page_size
+            chunk = df.iloc[start:end].copy()
+
+            # Create a row number column with zero-padded values
+            row_numbers = [str(i).zfill(row_num_width) for i in range(start, min(end, total_rows))]
+            chunk.insert(0, 'Row', row_numbers)
+
+            self.clear()
+            self.fancy_print(f"<DATA>Displaying rows {start+1} to {min(end, total_rows)} of {total_rows}\n</DATA>")
+            self.fancy_print(f"<DATA>{chunk.to_string(index=False)}</DATA>")
+
+            if end < total_rows:
+                result = self.fancy_input(f"<INPUT_PROMPT>type <KEYBOARD_KEY>n</KEYBOARD_KEY><INPUT_PROMPT> to quit or press </INPUT_PROMPT><KEYBOARD_KEY>ENTER</KEYBOARD_KEY><INPUT_PROMPT> to continue... </INPUT_PROMPT>")
+                if result.strip().lower() == 'n':
+                    break
+            else:
                 self.press_enter_pause()
 
 

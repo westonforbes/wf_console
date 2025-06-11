@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.0.6 - 2025-06-11
+- Added pagenated_print back and pandas dependency.
+
 # 0.0.5 - 2025-06-11
 - Fixed constants import (pretty sure this time).
 
