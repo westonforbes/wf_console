@@ -1,7 +1,7 @@
 import os
 import re
 import pandas as pd
-from constants import Constants
+from .constants import Constants
 
 class Console():
 
