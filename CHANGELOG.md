@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.0.12 - 2025-06-17
+- Migrated documentation to notion. Wiped out readme.
+
 # 0.0.11 - 2025-06-11
 - README.md emoji issue?
 
