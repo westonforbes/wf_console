@@ -3,6 +3,7 @@ WF Console - A utility class for enhanced terminal output with ANSI styling and 
 """
 import os
 import re
+import sys
 import pandas as pd
 from .constants import Constants
 
@@ -23,6 +24,20 @@ class Console():
         Works on both Windows and Unix-like systems.
         """
         os.system('cls' if os.name == 'nt' else 'clear')
+
+
+    @staticmethod
+    def clear_last_line():
+        """
+        Clear the last line in the console.
+        """
+        
+        # Move cursor up.
+        sys.stdout.write('\x1b[1A')
+        
+        # Clear entire line.
+        sys.stdout.write('\x1b[2K')
+        sys.stdout.flush()
 
     @staticmethod
     def fancy_print(text: str) -> None:
@@ -83,7 +98,7 @@ class Console():
         Console.clear()
 
         # Print the menu title.
-        Console.fancy_print(f"\n<MENU_TITLE>---{title}---</MENU_TITLE>")
+        Console.fancy_print(f"\n---{title}---")
 
         # Check that item_list is a list of strings.
         if not (isinstance(item_list, list) and all(isinstance(item, str) for item in item_list)): raise ValueError('item_list is not a list of strings.')
